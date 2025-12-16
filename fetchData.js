@@ -1,38 +1,70 @@
-const axios = require('axios');
+const Database = require('better-sqlite3');
 
-const BASE_URL = 'https://jsonplaceholder.typicode.com/users';
+// Create/connect to database
+const db = new Database('api_data.db');
 
-// Fetch user data
-async function fetchUserData() {
-    try {
-        const response = await axios.get(BASE_URL);
-        return response.data;
-    } catch (error) {
-        console.error('Error:', error.message);
-        return null;
-    }
-}
-
-// Transform user data
-function transformUserData(users) {
-    return users.map(user => ({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        city: user.address.city,
-        company: user.company.name,
-        timestamp: new Date().toISOString()
-    }));
-}
-
-// Main function
-async function main() {
-    console.log('Fetching user data...\n');
+// Create table if it doesn't exist
+function initializeDatabase() {
+    const createTable = `
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL,
+            city TEXT,
+            company TEXT,
+            timestamp TEXT NOT NULL
+        )
+    `;
     
-    const rawData = await fetchUserData();
-    const cleanData = transformUserData(rawData);
-    
-    console.log('Transformed Data:', cleanData);
+    db.exec(createTable);
+    console.log('✓ Database initialized');
 }
 
-main();
+// Insert user data
+function insertUser(user) {
+    const insert = db.prepare(`
+        INSERT OR REPLACE INTO users (id, name, email, city, company, timestamp)
+        VALUES (?, ?, ?, ?, ?, ?)
+    `);
+    
+    insert.run(
+        user.id,
+        user.name,
+        user.email,
+        user.city,
+        user.company,
+        user.timestamp
+    );
+}
+
+// Insert multiple users
+function insertUsers(users) {
+    const insertMany = db.transaction((users) => {
+        for (const user of users) {
+            insertUser(user);
+        }
+    });
+    
+    insertMany(users);
+    console.log(`✓ Inserted ${users.length} users into database`);
+}
+
+// Query all users
+function getAllUsers() {
+    const query = db.prepare('SELECT * FROM users');
+    return query.all();
+}
+
+// Query by city
+function getUsersByCity(city) {
+    const query = db.prepare('SELECT * FROM users WHERE city = ?');
+    return query.all(city);
+}
+
+// Export functions
+module.exports = {
+    initializeDatabase,
+    insertUsers,
+    getAllUsers,
+    getUsersByCity
+};
