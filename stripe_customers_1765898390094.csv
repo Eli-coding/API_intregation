@@ -1,0 +1,6 @@
+"id","email","name","created","currency","balance","timestamp","balance_dollars","created_date"
+"cus_TcEV8qjhY0U0jc","charlie.davis@example.com","Charlie Davis",1765898373,"usd",0,"2025-12-16T15:19:38.932Z","0.00","2025-12-16T15:19:33.000Z"
+"cus_TcEV10s7DsFGFo","alice.brown@example.com","Alice Brown",1765898373,"usd",0,"2025-12-16T15:19:38.933Z","0.00","2025-12-16T15:19:33.000Z"
+"cus_TcEVB12W0Z5ReV","bob.wilson@example.com","Bob Wilson",1765898372,"usd",0,"2025-12-16T15:19:38.933Z","0.00","2025-12-16T15:19:32.000Z"
+"cus_TcEVDEDqYejMy3","jane.smith@example.com","Jane Smith",1765898372,"usd",0,"2025-12-16T15:19:38.933Z","0.00","2025-12-16T15:19:32.000Z"
+"cus_TcEVW3yapa5egx","john.doe@example.com","John Doe",1765898372,"usd",0,"2025-12-16T15:19:38.933Z","0.00","2025-12-16T15:19:32.000Z"
